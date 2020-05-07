@@ -14,19 +14,19 @@ class subinfo(info.infoclass):
         self.options.dynamic.registerOption("enableCrashReporter", False)
 
     def setTargets(self):
-        self.versionInfo.setDefaultValues(tarballUrl="https://download.owncloud.com/desktop/stable/owncloudclient-${VERSION}.tar.xz",
-                                          tarballInstallSrc="owncloudclient-${VERSION}",
-                                          gitUrl="[git]https://github.com/owncloud/client")
+        self.versionInfo.setDefaultValues(tarballUrl="https://download.tine20drive.com/desktop/stable/tine20drive-${VERSION}.tar.xz",
+                                          tarballInstallSrc="tine20drive-${VERSION}",
+                                          gitUrl="[git]https://github.com/tine20/tine20Drive")
 
         # we don't have that branche yet
-        self.svnTargets["2.7"] = self.svnTargets["master"]
+        self.svnTargets["tine20drive-2.6.1"] = self.svnTargets["master-tine20drive"]
 
-        self.description = "ownCloud Desktop Client"
-        self.displayName = "ownCloud"
-        self.webpage = "https://owncloud.org"
+        self.description = "tine20drive Desktop Client"
+        self.displayName = "tine20drive"
+        self.webpage = "https://github.com/tine20/tine20Drive"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
+        self.buildDependencies["craft/craft-blueprints-tine20drive"] = None
         self.buildDependencies["dev-utils/cmake"] = None
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
         self.buildDependencies["dev-utils/breakpad-tools"] = None
@@ -38,9 +38,9 @@ class subinfo(info.infoclass):
         self.runtimeDependencies["libs/qt5/qtxmlpatterns"] = None
         self.runtimeDependencies["qt-libs/qtkeychain"] = None
         if self.options.dynamic.buildVfsWin:
-            self.runtimeDependencies["owncloud/client-plugin-vfs-win"] = None
+            self.runtimeDependencies["tine20drive/client-plugin-vfs-win"] = None
 
-        if self.buildTarget != "master" and self.buildTarget < CraftVersion("2.6"):
+        if self.buildTarget != "master-tine20drive" and self.buildTarget < CraftVersion("2.6"):
             self.runtimeDependencies["libs/qt5/qtwebkit"] = None
 
         if not CraftCore.compiler.isWindows:
@@ -62,7 +62,7 @@ class Package(CMakePackageBase):
         if 'OWNCLOUD_CMAKE_PARAMETERS' in os.environ:
                 self.subinfo.options.configure.args += os.environ['OWNCLOUD_CMAKE_PARAMETERS']
         if self.subinfo.options.dynamic.buildVfsWin:
-            self.win_vfs_plugin = CraftPackageObject.get("owncloud/client-plugin-vfs-win")
+            self.win_vfs_plugin = CraftPackageObject.get("tine20drive/client-plugin-vfs-win")
             self.subinfo.options.configure.args += f" -DVIRTUAL_FILE_SYSTEM_PLUGINS={self.win_vfs_plugin.instance.sourceDir()}"
 
         if "ENABLE_CRASHREPORTS" in os.environ:
@@ -73,7 +73,7 @@ class Package(CMakePackageBase):
 
     @property
     def applicationExecutable(self):
-        return os.environ.get('ApplicationExecutable', 'owncloud')
+        return os.environ.get('ApplicationExecutable', 'tine20drive')
 
     def fetch(self):
         if self.subinfo.options.dynamic.buildVfsWin:
@@ -182,9 +182,9 @@ class Package(CMakePackageBase):
         self.blacklist_file.append(os.path.join(self.packageDir(), 'blacklist.txt'))
         self.defines["appname"] = self.applicationExecutable
         self.defines["apppath"] = "Applications/KDE/" + self.applicationExecutable + ".app"
-        self.defines["company"] = "ownCloud GmbH"
+        self.defines["company"] = "Metaways Infosystems GmbH"
         self.defines["shortcuts"] = [{"name" : self.subinfo.displayName , "target" : f"bin/{self.defines['appname']}{CraftCore.compiler.executableSuffix}", "description" : self.subinfo.description}]
-        self.defines["icon"] = Path(self.buildDir()) / "src/gui/owncloud.ico"
+        self.defines["icon"] = Path(self.buildDir()) / "src/gui/tine20drive.ico"
         self.defines["pkgproj"] = Path(self.buildDir()) / "admin/osx/macosx.pkgproj"
 
 
