@@ -20,16 +20,16 @@ class subinfo(info.infoclass):
         self.options.dynamic.registerOption("forceAsserts", False)
 
     def setTargets(self):
-        self.versionInfo.setDefaultValues(tarballUrl="https://download.owncloud.com/desktop/stable/owncloudclient-${VERSION}.tar.xz",
-                                          tarballInstallSrc="owncloudclient-${VERSION}",
-                                          gitUrl="[git]https://github.com/owncloud/client")
+        self.versionInfo.setDefaultValues(tarballUrl="https://download.tineDrive.com/desktop/stable/tineDriveclient-${VERSION}.tar.xz",
+                                          tarballInstallSrc="tineDriveclient-${VERSION}",
+                                          gitUrl="[git]https://github.com/tine20/tineDrive")
 
-        self.description = "ownCloud Desktop Client"
-        self.displayName = "ownCloud"
-        self.webpage = "https://owncloud.org"
+        self.description = "tineDrive Desktop Client"
+        self.displayName = "tineDrive"
+        self.webpage = "https://www.tine-groupware.de"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
+        self.buildDependencies["craft/craft-blueprints-tineDrive"] = None
         self.buildDependencies["dev-utils/cmake"] = None
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
 
@@ -50,7 +50,7 @@ class subinfo(info.infoclass):
             self.runtimeDependencies["libs/qt5/qtwayland"] = None
 
         if self.options.dynamic.buildVfsWin:
-            self.runtimeDependencies["owncloud/client-desktop-vfs-win"] = None
+            self.runtimeDependencies["tineDrive/client-desktop-vfs-win"] = None
 
         if self.options.dynamic.enableAppImageUpdater:
             self.runtimeDependencies["libs/libappimageupdate"] = None
@@ -77,7 +77,7 @@ class Package(CMakePackageBase):
             # appending a string will convert the args to a string
             self.subinfo.options.configure.args += self.subinfo.options.configure.args
         if self.subinfo.options.dynamic.buildVfsWin:
-            self.win_vfs_plugin = CraftPackageObject.get("owncloud/client-desktop-vfs-win")
+            self.win_vfs_plugin = CraftPackageObject.get("tineDrive/client-desktop-vfs-win")
             self.subinfo.options.configure.args += [f"-DVIRTUAL_FILE_SYSTEM_PLUGINS=off;suffix;{self.win_vfs_plugin.instance.sourceDir()}"]
         if self.subinfo.options.dynamic.enableCrashReporter:
             self.subinfo.options.configure.args += ["-DWITH_CRASHREPORTER=ON"]
@@ -92,7 +92,7 @@ class Package(CMakePackageBase):
 
     @property
     def applicationExecutable(self):
-        return os.environ.get('ApplicationExecutable', 'owncloud')
+        return os.environ.get('ApplicationExecutable', 'tineDrive')
 
     def fetch(self):
         if self.subinfo.options.dynamic.buildVfsWin:
@@ -216,16 +216,14 @@ class Package(CMakePackageBase):
         self.blacklist_file.append(os.path.join(self.packageDir(), 'blacklist.txt'))
         self.defines["appname"] = self.applicationExecutable
         self.defines["apppath"] = "Applications/KDE/" + self.applicationExecutable + ".app"
-        self.defines["company"] = "ownCloud GmbH"
+        self.defines["company"] = "Metaways Infosystems GmbH"
         self.defines["shortcuts"] = [{"name" : self.subinfo.displayName , "target" : f"{self.defines['appname']}{CraftCore.compiler.executableSuffix}", "description" : self.subinfo.description}]
-        self.defines["icon"] = Path(self.buildDir()) / "src/gui/owncloud.ico"
+        self.defines["icon"] = Path(self.buildDir()) / "src/gui/tineDrive.ico"
         self.defines["pkgproj"] = Path(self.buildDir()) / "admin/osx/macosx.pkgproj"
         ver = self.owncloudVersion()
         if ver:
             self.defines["version"] =  ver
-
-        self.blacklist.append(re.compile(r"bin[/|\\](?!" + self.applicationExecutable + r").*" + re.escape(CraftCore.compiler.executableSuffix)))
-
+  
         self.ignoredPackages += ["binary/mysql"]
         if not CraftCore.compiler.isLinux:
             self.ignoredPackages += ["libs/dbus"]
