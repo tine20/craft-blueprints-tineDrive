@@ -13,11 +13,11 @@ class subinfo(info.infoclass):
             del self.targets[ver]
             self.svnTargets[ver] = self.versionInfo.format("git@github.com:owncloud/client-desktop-vfs-win.git|${VERSION_MAJOR}.${VERSION_MINOR}|", ver)
 
-        self.description = "ownCloud Desktop Client - virtual file systme plugin"
-        self.webpage = "https://owncloud.org"
+        self.description = "tineDrive Desktop Client - virtual file systme plugin"
+        self.webpage = "https://www.tine-groupware.de"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
+        self.buildDependencies["craft/craft-blueprints-tineDrive"] = None
 
 from Package.VirtualPackageBase import *
 
