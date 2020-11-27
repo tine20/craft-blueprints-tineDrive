@@ -17,22 +17,23 @@ class subinfo(info.infoclass):
         self.options.dynamic.registerOption("enableLibcloudproviders", False)
 
     def setTargets(self):
-        self.versionInfo.setDefaultValues(tarballUrl="https://download.owncloud.com/desktop/stable/owncloudclient-${VERSION}.tar.xz",
-                                          tarballInstallSrc="owncloudclient-${VERSION}",
-                                          gitUrl="[git]https://github.com/owncloud/client")
+        self.versionInfo.setDefaultValues(tarballUrl="https://download.tine20drive.com/desktop/stable/tine20driveclient-${VERSION}.tar.xz",
+                                          tarballInstallSrc="tine20driveclient-${VERSION}",
+                                          gitUrl="[git]https://github.com/tine20/tine20Drive")
 
-        self.description = "ownCloud Desktop Client"
-        self.displayName = "ownCloud"
-        self.webpage = "https://owncloud.org"
+        self.description = "tine20drive Desktop Client"
+        self.displayName = "tine20drive"
+        self.webpage = "https://tine20drive.org"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
+        self.buildDependencies["craft/craft-blueprints-tine20Drive"] = None
         self.buildDependencies["dev-utils/cmake"] = None
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
 
         self.buildDependencies["libs/libre-graph-api-cpp-qt-client"] = None
 
         self.runtimeDependencies["libs/sparkle"] = None
+        # self.runtimeDependencies["tine20drive/sparkle"] = None
         self.runtimeDependencies["libs/zlib"] = None
         self.runtimeDependencies["libs/sqlite"] = None
         self.runtimeDependencies["libs/qt5/qtbase"] = None
@@ -47,7 +48,7 @@ class subinfo(info.infoclass):
             self.runtimeDependencies["libs/qt5/qtwayland"] = None
 
         if self.options.dynamic.buildVfsWin:
-            self.runtimeDependencies["owncloud/client-desktop-vfs-win"] = None
+            self.runtimeDependencies["tine20drive/client-desktop-vfs-win"] = None
 
         if self.options.dynamic.buildTests:
             self.buildDependencies["dev-utils/cmocka"] = None
@@ -75,7 +76,7 @@ class Package(CMakePackageBase):
             # appending a string will convert the args to a string
             self.subinfo.options.configure.args += self.subinfo.options.configure.args
         if self.subinfo.options.dynamic.buildVfsWin:
-            self.win_vfs_plugin = CraftPackageObject.get("owncloud/client-desktop-vfs-win")
+            self.win_vfs_plugin = CraftPackageObject.get("tine20drive/client-desktop-vfs-win")
             self.subinfo.options.configure.args += [f"-DVIRTUAL_FILE_SYSTEM_PLUGINS={self.win_vfs_plugin.instance.sourceDir()}"]
         if self.subinfo.options.dynamic.enableCrashReporter:
             self.subinfo.options.configure.args += ["-DWITH_CRASHREPORTER=ON"]
@@ -88,7 +89,7 @@ class Package(CMakePackageBase):
 
     @property
     def applicationExecutable(self):
-        return os.environ.get('ApplicationExecutable', 'owncloud')
+        return os.environ.get('ApplicationExecutable', 'tine20drive')
 
     def fetch(self):
         if self.subinfo.options.dynamic.buildVfsWin:
@@ -212,9 +213,9 @@ class Package(CMakePackageBase):
         self.blacklist_file.append(os.path.join(self.packageDir(), 'blacklist.txt'))
         self.defines["appname"] = self.applicationExecutable
         self.defines["apppath"] = "Applications/KDE/" + self.applicationExecutable + ".app"
-        self.defines["company"] = "ownCloud GmbH"
+        self.defines["company"] = "tine20drive GmbH"
         self.defines["shortcuts"] = [{"name" : self.subinfo.displayName , "target" : f"{self.defines['appname']}{CraftCore.compiler.executableSuffix}", "description" : self.subinfo.description}]
-        self.defines["icon"] = Path(self.buildDir()) / "src/gui/owncloud.ico"
+        self.defines["icon"] = Path(self.buildDir()) / "src/gui/tine20drive.ico"
         self.defines["pkgproj"] = Path(self.buildDir()) / "admin/osx/macosx.pkgproj"
         ver = self.owncloudVersion()
         if ver:
