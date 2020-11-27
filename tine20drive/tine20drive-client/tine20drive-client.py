@@ -14,23 +14,24 @@ class subinfo(info.infoclass):
         self.options.dynamic.registerOption("enableCrashReporter", False)
 
     def setTargets(self):
-        self.versionInfo.setDefaultValues(tarballUrl="https://download.owncloud.com/desktop/stable/owncloudclient-${VERSION}.tar.xz",
-                                          tarballInstallSrc="owncloudclient-${VERSION}",
-                                          gitUrl="[git]https://github.com/owncloud/client")
+        self.versionInfo.setDefaultValues(tarballUrl="https://download.tine20drive.com/desktop/stable/tine20driveclient-${VERSION}.tar.xz",
+                                          tarballInstallSrc="tine20driveclient-${VERSION}",
+                                          gitUrl="[git]https://github.com/tine20/tine20Drive")
 
         # we don't have that branche yet
         self.svnTargets["2.8"] = self.svnTargets["master"]
 
-        self.description = "ownCloud Desktop Client"
-        self.displayName = "ownCloud"
-        self.webpage = "https://owncloud.org"
+        self.description = "tine20drive Desktop Client"
+        self.displayName = "tine20drive"
+        self.webpage = "https://tine20drive.org"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
+        self.buildDependencies["craft/craft-blueprints-tine20Drive"] = None
         self.buildDependencies["dev-utils/cmake"] = None
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
         self.buildDependencies["dev-utils/breakpad-tools"] = None
         self.runtimeDependencies["libs/sparkle"] = None
+        # self.runtimeDependencies["tine20drive/sparkle"] = None
         self.runtimeDependencies["libs/zlib"] = None
         self.runtimeDependencies["libs/sqlite"] = None
         self.runtimeDependencies["libs/qt5/qtbase"] = None
@@ -40,7 +41,7 @@ class subinfo(info.infoclass):
         self.runtimeDependencies["libs/qt5/qtxmlpatterns"] = None
         self.runtimeDependencies["qt-libs/qtkeychain"] = None
         if self.options.dynamic.buildVfsWin:
-            self.runtimeDependencies["owncloud/client-plugin-vfs-win"] = None
+            self.runtimeDependencies["tine20drive/client-plugin-vfs-win"] = None
 
         if self.buildTarget != "master" and self.buildTarget < CraftVersion("2.6"):
             self.runtimeDependencies["libs/qt5/qtwebkit"] = None
@@ -55,13 +56,13 @@ class Package(CMakePackageBase):
     def __init__(self):
         CMakePackageBase.__init__(self)
         self.subinfo.options.fetch.checkoutSubmodules = True
-        # Pending PR to move to standard BUILD_TESTING: https://github.com/owncloud/client/pull/6917#issuecomment-444845521
+        # Pending PR to move to standard BUILD_TESTING: https://github.com/tine20drive/client/pull/6917#issuecomment-444845521
         self.subinfo.options.configure.args += " -DUNIT_TESTING={testing} ".format(testing="ON" if self.buildTests else "OFF")
 
         if 'OWNCLOUD_CMAKE_PARAMETERS' in os.environ:
                 self.subinfo.options.configure.args += os.environ['OWNCLOUD_CMAKE_PARAMETERS']
         if self.subinfo.options.dynamic.buildVfsWin:
-            self.win_vfs_plugin = CraftPackageObject.get("owncloud/client-plugin-vfs-win")
+            self.win_vfs_plugin = CraftPackageObject.get("tine20drive/client-plugin-vfs-win")
             self.subinfo.options.configure.args += f" -DVIRTUAL_FILE_SYSTEM_PLUGINS={self.win_vfs_plugin.instance.sourceDir()}"
 
         if "ENABLE_CRASHREPORTS" in os.environ:
@@ -72,7 +73,7 @@ class Package(CMakePackageBase):
 
     @property
     def applicationExecutable(self):
-        return os.environ.get('ApplicationExecutable', 'owncloud')
+        return os.environ.get('ApplicationExecutable', 'tine20drive')
 
     def fetch(self):
         if self.subinfo.options.dynamic.buildVfsWin:
@@ -181,9 +182,9 @@ class Package(CMakePackageBase):
         self.blacklist_file.append(os.path.join(self.packageDir(), 'blacklist.txt'))
         self.defines["appname"] = self.applicationExecutable
         self.defines["apppath"] = "Applications/KDE/" + self.applicationExecutable + ".app"
-        self.defines["company"] = "ownCloud GmbH"
+        self.defines["company"] = "tine20drive GmbH"
         self.defines["shortcuts"] = [{"name" : self.subinfo.displayName , "target" : f"{self.defines['appname']}{CraftCore.compiler.executableSuffix}", "description" : self.subinfo.description}]
-        self.defines["icon"] = Path(self.buildDir()) / "src/gui/owncloud.ico"
+        self.defines["icon"] = Path(self.buildDir()) / "src/gui/tine20drive.ico"
         self.defines["pkgproj"] = Path(self.buildDir()) / "admin/osx/macosx.pkgproj"
 
 
@@ -204,7 +205,7 @@ class Package(CMakePackageBase):
         if isinstance(self, NullsoftInstallerPackager):
             archiveDir = Path(self.archiveDir())
             # TODO: install translations to the correct location in the first place
-            for src, dest in [("bin",  ""), ("share/owncloud/i18n",  "")]:
+            for src, dest in [("bin",  ""), ("share/tine20drive/i18n",  "")]:
                 if not utils.mergeTree(archiveDir / src, archiveDir / dest):
                     return True
         else:
