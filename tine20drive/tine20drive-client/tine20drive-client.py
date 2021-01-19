@@ -23,7 +23,7 @@ class subinfo(info.infoclass):
 
         self.description = "tine20drive Desktop Client"
         self.displayName = "tine20drive"
-        self.webpage = "https://tine20drive.org"
+        self.webpage = "https://tine20.com"
 
     def setDependencies(self):
         self.buildDependencies["craft/craft-blueprints-tine20Drive"] = None
@@ -182,7 +182,7 @@ class Package(CMakePackageBase):
         self.blacklist_file.append(os.path.join(self.packageDir(), 'blacklist.txt'))
         self.defines["appname"] = self.applicationExecutable
         self.defines["apppath"] = "Applications/KDE/" + self.applicationExecutable + ".app"
-        self.defines["company"] = "tine20drive GmbH"
+        self.defines["company"] = "Metaways Infosystems GmbH"
         self.defines["shortcuts"] = [{"name" : self.subinfo.displayName , "target" : f"{self.defines['appname']}{CraftCore.compiler.executableSuffix}", "description" : self.subinfo.description}]
         self.defines["icon"] = Path(self.buildDir()) / "src/gui/tine20drive.ico"
         self.defines["pkgproj"] = Path(self.buildDir()) / "admin/osx/macosx.pkgproj"

@@ -14,7 +14,7 @@ class subinfo(info.infoclass):
             self.svnTargets[ver] = self.versionInfo.format("ssh://git@gitea.tine20drive.services:2222/client/client-plugin-vfs-win.git|${VERSION_MAJOR}.${VERSION_MINOR}|", ver)
 
         self.description = "tine20drive Desktop Client - virtual file systme plugin"
-        self.webpage = "https://tine20drive.org"
+        self.webpage = "https://tine20.com"
 
     def setDependencies(self):
         self.buildDependencies["craft/craft-blueprints-tine20Drive"] = "default"
