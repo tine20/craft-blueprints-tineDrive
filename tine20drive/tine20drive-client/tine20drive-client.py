@@ -30,8 +30,8 @@ class subinfo(info.infoclass):
         self.buildDependencies["dev-utils/cmake"] = None
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
         self.buildDependencies["dev-utils/breakpad-tools"] = None
-        self.runtimeDependencies["libs/sparkle"] = None
-        # self.runtimeDependencies["tine20drive/sparkle"] = None
+        # self.runtimeDependencies["libs/sparkle"] = None
+        self.runtimeDependencies["tine20drive/sparkle"] = None
         self.runtimeDependencies["libs/zlib"] = None
         self.runtimeDependencies["libs/sqlite"] = None
         self.runtimeDependencies["libs/qt5/qtbase"] = None
