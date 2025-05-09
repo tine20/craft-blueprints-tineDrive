@@ -23,7 +23,7 @@ class subinfo(info.infoclass):
         self.webpage = "https://owncloud.dev/libre-graph-api/"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
+        self.buildDependencies["craft/craft-blueprints-tineDrive"] = None
         self.runtimeDependencies["libs/qt/qtbase"] = None
 
 

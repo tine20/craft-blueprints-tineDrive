@@ -20,17 +20,17 @@ class subinfo(info.infoclass):
 
     def setTargets(self):
         self.versionInfo.setDefaultValues(
-            tarballUrl="https://download.owncloud.com/desktop/stable/owncloudclient-${VERSION}.tar.xz",
-            tarballInstallSrc="owncloudclient-${VERSION}",
-            gitUrl="[git]https://github.com/owncloud/client",
+            tarballUrl="https://download.tineDrive.com/desktop/stable/tineDriveclient-${VERSION}.tar.xz",
+            tarballInstallSrc="tineDriveclient-${VERSION}",
+            gitUrl="[git]https://github.com/tine20/tineDrive",
         )
 
-        self.description = "ownCloud Desktop Client"
-        self.displayName = "ownCloud"
-        self.webpage = "https://github.com/owncloud/client"
+        self.description = "tineDrive Desktop Client"
+        self.displayName = "tineDrive"
+        self.webpage = "https://www.tine-groupware.de"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
+        self.buildDependencies["craft/craft-blueprints-tineDrive"] = None
         self.buildDependencies["dev-utils/cmake"] = None
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
 
@@ -53,13 +53,13 @@ class subinfo(info.infoclass):
         self.runtimeDependencies["libs/kdsingleapplication"] = None
 
         if self.options.dynamic.buildVfsWin:
-            self.runtimeDependencies["owncloud/client-desktop-vfs-win"] = None
+            self.runtimeDependencies["tineDrive/client-desktop-vfs-win"] = None
 
         if self.options.dynamic.enableAppImageUpdater:
             self.runtimeDependencies["libs/libappimageupdate"] = None
 
         if self.options.dynamic.enableCrashReporter:
-            self.runtimeDependencies["owncloud/libcrashreporter-qt"] = None
+            self.runtimeDependencies["tineDrive/libcrashreporter-qt"] = None
             self.buildDependencies["dev-utils/breakpad"] = None
             self.buildDependencies["dev-utils/symsorter"] = None
 
@@ -79,7 +79,7 @@ class Package(CMakePackageBase):
             # appending a string will convert the args to a string
             self.subinfo.options.configure.args += self.subinfo.options.configure.args
         if self.subinfo.options.dynamic.buildVfsWin:
-            self.win_vfs_plugin = CraftPackageObject.get("owncloud/client-desktop-vfs-win")
+            self.win_vfs_plugin = CraftPackageObject.get("tineDrive/client-desktop-vfs-win")
             self.subinfo.options.configure.args += [f"-DVIRTUAL_FILE_SYSTEM_PLUGINS=off;suffix;{self.win_vfs_plugin.instance.sourceDir()}"]
         if self.subinfo.options.dynamic.enableCrashReporter:
             self.subinfo.options.configure.args += ["-DWITH_CRASHREPORTER=ON"]
@@ -108,11 +108,11 @@ class Package(CMakePackageBase):
 
     @property
     def applicationExecutable(self):
-        return self._get_env_vars("ApplicationExecutable", "APPLICATION_EXECUTABLE", fallback="owncloud")
+        return self._get_env_vars("ApplicationExecutable", "APPLICATION_EXECUTABLE", fallback="tineDrive")
 
     @property
     def applicationShortname(self):
-        return self._get_env_vars("ApplicationShortname", "APPLICATION_SHORTNAME", fallback="owncloud")
+        return self._get_env_vars("ApplicationShortname", "APPLICATION_SHORTNAME", fallback="tineDrive")
 
     def fetch(self):
         if self.subinfo.options.dynamic.buildVfsWin:
@@ -255,7 +255,7 @@ class Package(CMakePackageBase):
         self.defines["appname"] = self.applicationExecutable
         self.defines["appimage_native_package_name"] = f'{self.applicationShortname.lower().replace("_", "-")}-client'
         self.defines["apppath"] = "Applications/KDE/" + self.applicationExecutable + ".app"
-        self.defines["company"] = "ownCloud GmbH"
+        self.defines["company"] = "Metaways Infosystems GmbH"
 
         exePath = f"{self.defines['appname']}{CraftCore.compiler.executableSuffix}"
         if isinstance(self, NullsoftInstallerPackager):
@@ -267,7 +267,7 @@ class Package(CMakePackageBase):
                 "description": self.subinfo.description,
             }
         ]
-        self.defines["icon"] = self.buildDir() / "src/gui/owncloud.ico"
+        self.defines["icon"] = self.buildDir() / "src/gui/tineDrive.ico"
         self.defines["pkgproj"] = self.buildDir() / "admin/osx/macosx.pkgproj"
         if CraftPackageObject.get("dev-utils/linuxdeploy-plugin-native-packages").isInstalled:
             self.defines["appimage_extra_output"] = ["native_packages"]

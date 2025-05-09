@@ -5,9 +5,9 @@ from CraftCore import CraftCore
 
 class subinfo(info.infoclass):
     def setTargets(self):
-        for ver in ["master", "6", "5"]:
-            self.svnTargets[ver] = f"[git]https://github.com/owncloud/craft-blueprints-owncloud.git|{ver}|"
-        self.defaultTarget = "master"
+        for ver in ["6.0.0-tineDrive"]:
+            self.svnTargets[ver] = f"[git]https://github.com/tine20/craft-blueprints-tineDrive.git|{ver}|"
+        self.defaultTarget = "6.0.0-tineDrive"
 
     def setDependencies(self):
         self.buildDependencies["craft/craft-core"] = "default"

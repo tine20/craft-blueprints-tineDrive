@@ -1,3 +1,3 @@
-# craft-blueprints-owncloud
-* craft --add-blueprint-repository https://github.com/owncloud/craft-blueprints-owncloud.git
-* craft owncloud-client
+# craft-blueprints-tineDrive
+* craft --add-blueprint-repository https://github.com/tine20/craft-blueprints-tineDrive.git
+* craft tineDrive-client
