@@ -15,22 +15,22 @@ class subinfo(info.infoclass):
         self.options.dynamic.registerOption("buildNumber", "")
         self.options.dynamic.registerOption("enableCrashReporter", False)
         self.options.dynamic.registerOption("enableAppImageUpdater", False)
-        self.options.dynamic.registerOption("enableAutoUpdater", False)
+        self.options.dynamic.registerOption("enableAutoUpdater", True)
         self.options.dynamic.registerOption("forceAsserts", False)
 
     def setTargets(self):
         self.versionInfo.setDefaultValues(
-            tarballUrl="https://download.owncloud.com/desktop/stable/owncloudclient-${VERSION}.tar.xz",
-            tarballInstallSrc="owncloudclient-${VERSION}",
-            gitUrl="[git]https://github.com/owncloud/client",
+            tarballUrl="https://download.tineDrive.com/desktop/stable/tineDriveclient-${VERSION}.tar.xz",
+            tarballInstallSrc="tineDriveclient-${VERSION}",
+            gitUrl="[git]https://github.com/tine20/tineDrive",
         )
 
-        self.description = "ownCloud Desktop Client"
-        self.displayName = "ownCloud"
-        self.webpage = "https://github.com/owncloud/client"
+        self.description = "tineDrive Desktop Client"
+        self.displayName = "tineDrive"
+        self.webpage = "https://www.tine-groupware.de"
 
     def setDependencies(self):
-        self.buildDependencies["craft/craft-blueprints-owncloud"] = None
+        self.buildDependencies["craft/craft-blueprints-tineDrive"] = None
         self.buildDependencies["dev-utils/cmake"] = None
         self.buildDependencies["kde/frameworks/extra-cmake-modules"] = None
 
@@ -72,7 +72,7 @@ class Package(CMakePackageBase):
         super().__init__(**kwargs)
         self.subinfo.options.fetch.checkoutSubmodules = True
         # TODO: fix msi generation which expects the existance of a /translation dir
-        self.subinfo.options.package.moveTranslationsToBin = False
+        self.subinfo.options.package.moveTranslationsToBin = True
 
         extraParam = os.environ.get("OWNCLOUD_CMAKE_PARAMETERS", "")
         if extraParam:
@@ -108,11 +108,11 @@ class Package(CMakePackageBase):
 
     @property
     def applicationExecutable(self):
-        return self._get_env_vars("ApplicationExecutable", "APPLICATION_EXECUTABLE", fallback="owncloud")
+        return self._get_env_vars("ApplicationExecutable", "APPLICATION_EXECUTABLE", fallback="tineDrive")
 
     @property
     def applicationShortname(self):
-        return self._get_env_vars("ApplicationShortname", "APPLICATION_SHORTNAME", fallback="owncloud")
+        return self._get_env_vars("ApplicationShortname", "APPLICATION_SHORTNAME", fallback="tineDrive")
 
     def fetch(self):
         if self.subinfo.options.dynamic.buildVfsWin:
@@ -147,6 +147,9 @@ class Package(CMakePackageBase):
             if configDir.exists():
                 if not utils.mergeTree(configDir, Path(self.installDir()) / "bin"):
                     return False
+
+            vfs_dll = Path(__file__).parent / "files" / "ownCloud_vfs_wincfapi.dll"
+            utils.copyFile(vfs_dll, self.installDir() / "bin" / "ownCloud_vfs_wincfapi.dll")
 
         return True
 
@@ -255,7 +258,7 @@ class Package(CMakePackageBase):
         self.defines["appname"] = self.applicationExecutable
         self.defines["appimage_native_package_name"] = f'{self.applicationShortname.lower().replace("_", "-")}-client'
         self.defines["apppath"] = "Applications/KDE/" + self.applicationExecutable + ".app"
-        self.defines["company"] = "ownCloud GmbH"
+        self.defines["company"] = "Metaways Infosystems GmbH"
 
         exePath = f"{self.defines['appname']}{CraftCore.compiler.executableSuffix}"
         if isinstance(self, NullsoftInstallerPackager):
@@ -267,7 +270,7 @@ class Package(CMakePackageBase):
                 "description": self.subinfo.description,
             }
         ]
-        self.defines["icon"] = self.buildDir() / "src/gui/owncloud.ico"
+        self.defines["icon"] = self.buildDir() / "src/gui/tineDrive.ico"
         self.defines["pkgproj"] = self.buildDir() / "admin/osx/macosx.pkgproj"
         if CraftPackageObject.get("dev-utils/linuxdeploy-plugin-native-packages").isInstalled:
             self.defines["appimage_extra_output"] = ["native_packages"]
